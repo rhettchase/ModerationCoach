@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ModerationCrudApp.Data;
+using DotNetEnv;
 using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ModerationCrudApp
@@ -11,34 +11,27 @@ namespace ModerationCrudApp
     {
         public static async Task Main(string[] args)
         {
+            // Load environment variables from .env file
+            Env.Load();
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
-            // Register ApplicationDbContext for identity management
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            // Register AppDbContext for user information
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            // Register Identity services
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                 .AddRoles<IdentityRole>() // roles
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>() // Add roles support
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            builder.Services.Configure<IdentityOptions>(options =>
-            {
-                options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
-            });
-
-
-            builder.Services.AddControllersWithViews();  // Add MVC support
-            builder.Services.AddRazorPages(); // Add Razor Pages support
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();
 
             var app = builder.Build();
 
@@ -56,7 +49,6 @@ namespace ModerationCrudApp
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -65,17 +57,17 @@ namespace ModerationCrudApp
 
             app.UseRouting();
 
-            app.UseAuthentication();  // authentication middleware
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapRazorPages();
-            app.MapControllers();  // Map MVC Controllers
+            app.MapControllers();
 
             app.MapControllerRoute(
-               name: "default",
-               pattern: "{controller=Home}/{action=Index}/{id?}");
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }

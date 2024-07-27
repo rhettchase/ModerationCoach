@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ModerationCrudApp.Data;
 
@@ -11,9 +12,11 @@ using ModerationCrudApp.Data;
 namespace ModerationCrudApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240727215439_AddApplicationUserProperties")]
+    partial class AddApplicationUserProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,8 +174,8 @@ namespace ModerationCrudApp.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly?>("DateOfBirth")
+                        .HasColumnType("date");
 
                     b.Property<int?>("DrinksPerWeek")
                         .HasColumnType("int");
@@ -187,10 +190,10 @@ namespace ModerationCrudApp.Data.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("GoalReduceAmount")
+                    b.Property<bool?>("GoalReduceAmount")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("GoalReduceFrequency")
+                    b.Property<bool?>("GoalReduceFrequency")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")

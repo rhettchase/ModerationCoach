@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ModerationCrudApp.Data
 {
-    public class RoleInitializer
+    public static class RoleInitializer
     {
         public static async Task Initialize(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string[] roleNames = { "Admin", "User" };
             IdentityResult roleResult;
@@ -21,23 +25,35 @@ namespace ModerationCrudApp.Data
                 }
             }
 
+            // Read admin credentials from environment variables
+            var adminEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL");
+            var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
+
             // Create an admin user and assign the Admin role
-            var adminUser = new IdentityUser
+            var adminUser = new ApplicationUser
             {
-                UserName = "admin@example.com",
-                Email = "admin@example.com",
-                EmailConfirmed = true
+                UserName = adminEmail,
+                Email = adminEmail,
+                EmailConfirmed = true,
+                FirstName = "Admin",
+                LastName = "User"
             };
 
-            string adminPassword = "Admin@123";
-
-            var user = await userManager.FindByEmailAsync("admin@example.com");
+            var user = await userManager.FindByEmailAsync(adminEmail);
             if (user == null)
             {
                 var createAdmin = await userManager.CreateAsync(adminUser, adminPassword);
                 if (createAdmin.Succeeded)
                 {
                     await userManager.AddToRoleAsync(adminUser, "Admin");
+                }
+            }
+            else
+            {
+                // Ensure the user is in the Admin role
+                if (!await userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    await userManager.AddToRoleAsync(user, "Admin");
                 }
             }
         }

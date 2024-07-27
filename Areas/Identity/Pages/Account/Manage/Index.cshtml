@@ -1,0 +1,68 @@
+﻿@page
+@model ModerationCrudApp.Areas.Identity.Pages.Account.Manage.IndexModel
+@{
+    ViewData["Title"] = "Manage your account";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.FirstName"></label>
+                <input asp-for="Input.FirstName" class="form-control" />
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.LastName"></label>
+                <input asp-for="Input.LastName" class="form-control" />
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.DateOfBirth"></label>
+                <input asp-for="Input.DateOfBirth" class="form-control" />
+                <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.NumberOfDryDays"></label>
+                <input asp-for="Input.NumberOfDryDays" class="form-control" />
+                <span asp-validation-for="Input.NumberOfDryDays" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.DrinksPerWeek"></label>
+                <input asp-for="Input.DrinksPerWeek" class="form-control" />
+                <span asp-validation-for="Input.DrinksPerWeek" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.GoalReduceFrequency"></label>
+                <input asp-for="Input.GoalReduceFrequency" class="form-control" type="checkbox" />
+                <span asp-validation-for="Input.GoalReduceFrequency" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.GoalReduceAmount"></label>
+                <input asp-for="Input.GoalReduceAmount" class="form-control" type="checkbox" />
+                <span asp-validation-for="Input.GoalReduceAmount" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="form-group">
+                <label asp-for="Input.ReduceByDrinks"></label>
+                <input asp-for="Input.ReduceByDrinks" class="form-control" />
+                <span asp-validation-for="Input.ReduceByDrinks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ReduceByDays"></label>
+                <input asp-for="Input.ReduceByDays" class="form-control" />
+                <span asp-validation-for="Input.ReduceByDays" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
