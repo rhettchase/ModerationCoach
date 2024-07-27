@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ModerationCrudApp.Data;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ModerationCrudApp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -25,12 +28,25 @@ namespace ModerationCrudApp
 
             // Register Identity services
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                 .AddRoles<IdentityRole>() // roles
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
+            });
+
 
             builder.Services.AddControllersWithViews();  // Add MVC support
             builder.Services.AddRazorPages(); // Add Razor Pages support
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await RoleInitializer.Initialize(services);
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

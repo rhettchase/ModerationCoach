@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModerationCrudApp.Data;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ModerationCrudApp.Controllers
 {
+    [Authorize(Roles = "Admin")] // Restrict access to only Admin role
     public class UsersController : Controller
     {
         private readonly AppDbContext _context;
