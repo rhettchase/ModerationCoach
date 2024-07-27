@@ -24,7 +24,8 @@ namespace ModerationCrudApp
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            builder.Services.AddRazorPages();
+            builder.Services.AddControllersWithViews();  // Add MVC support
+            builder.Services.AddRazorPages(); // Add Razor Pages support
 
             var app = builder.Build();
 
@@ -45,12 +46,15 @@ namespace ModerationCrudApp
 
             app.UseRouting();
 
+            app.UseAuthentication();  // authentication middleware
             app.UseAuthorization();
 
             app.MapRazorPages();
+            app.MapControllers();  // Map MVC Controllers
+
             app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Users}/{action=Index}/{id?}");
+               name: "default",
+               pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
