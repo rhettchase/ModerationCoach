@@ -12,6 +12,7 @@ namespace ModerationCrudApp
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
             // Register ApplicationDbContext for identity management
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -22,8 +23,10 @@ namespace ModerationCrudApp
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+            // Register Identity services
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             builder.Services.AddControllersWithViews();  // Add MVC support
             builder.Services.AddRazorPages(); // Add Razor Pages support
 
