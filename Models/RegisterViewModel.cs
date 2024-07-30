@@ -25,8 +25,8 @@ namespace ModerationCrudApp.Models
 
         public int? NumberOfDryDays { get; set; }
         public int? DrinksPerWeek { get; set; }
-        public bool? GoalReduceFrequency { get; set; } 
-        public bool? GoalReduceAmount { get; set; } 
+        public bool GoalReduceFrequency { get; set; }  // Change to non-nullable
+        public bool GoalReduceAmount { get; set; }  // Change to non-nullable
         public int? ReduceByDrinks { get; set; }
         public int? ReduceByDays { get; set; }
     }
